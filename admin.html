@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hayato Admin Panel</title>
+  <script type="module" src="firebase.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0e0e0e;
+      color: #f0f0f0;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff4655;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 70, 85, 0.5);
+    }
+    button {
+      background-color: #ff4655;
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    input {
+      padding: 8px;
+      margin-right: 5px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel - Hayato E-Sports</h1>  <div class="card">
+    <h2>Pending Payments</h2>
+    <div id="pendingPayments"></div>
+  </div>  <div class="card">
+    <h2>Send Coins to User</h2>
+    <input type="text" id="coinUid" placeholder="User UID">
+    <input type="number" id="coinAmount" placeholder="Coins">
+    <button onclick="sendCoins()">Send Coins</button>
+  </div>  <div class="card">
+    <h2>Ban User</h2>
+    <input type="text" id="banUid" placeholder="User UID">
+    <button onclick="banUser()">Ban</button>
+  </div>  <script type="module">
+    import { getFirestore, collection, getDocs, updateDoc, doc, getDoc } from "firebase/firestore";
+    import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+    import { initializeApp } from "firebase/app";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDnbD4DjpY3gaD3s1NdHOs_q6LqWzk5VqI",
+      authDomain: "hayato-esports-87c0e.firebaseapp.com",
+      projectId: "hayato-esports-87c0e",
+      storageBucket: "hayato-esports-87c0e.appspot.com",
+      messagingSenderId: "516162272287",
+      appId: "1:516162272287:web:12ecf2ae672cc0658ee92a",
+      measurementId: "G-5QG34M1C94"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadPayments() {
+      const querySnapshot = await getDocs(collection(db, "payments"));
+      const container = document.getElementById("pendingPayments");
+      container.innerHTML = "";
+      querySnapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        if (data.status === "pending") {
+          container.innerHTML += `
+            <div style="margin-bottom: 10px">
+              <strong>${data.name}</strong> (${data.number})<br>
+              <a href="${data.screenshot}" target="_blank">View Screenshot</a><br>
+              <button onclick="approvePayment('${docSnap.id}', '${data.userId}')">Approve</button>
+            </div>
+          `;
+        }
+      });
+    }
+    window.approvePayment = async function (docId, uid) {
+      const paymentRef = doc(db, "payments", docId);
+      await updateDoc(paymentRef, { status: "approved" });
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+      const coins = userSnap.data().coins || 0;
+      await updateDoc(userRef, { coins: coins + 20 });
+      alert("Payment Approved and 20 Coins Added");
+      loadPayments();
+    };
+
+    window.sendCoins = async function () {
+      const uid = document.getElementById("coinUid").value;
+      const coins = parseInt(document.getElementById("coinAmount").value);
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+      const existing = userSnap.data().coins || 0;
+      await updateDoc(userRef, { coins: existing + coins });
+      alert("Coins sent successfully!");
+    };
+
+    window.banUser = async function () {
+      const uid = document.getElementById("banUid").value;
+      const userRef = doc(db, "users", uid);
+      await updateDoc(userRef, { banned: true });
+      alert("User has been banned.");
+    };
+
+    loadPayments();
+  </script></body>
+</html>
