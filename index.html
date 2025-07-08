@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hayato E-Sports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(145deg, #0a1014, #121a20);
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 3rem 1rem;
+    }
+    .login-box {
+      background-color: #101820;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00bfff;
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #1e2a33;
+      color: #fff;
+    }
+    .btn-blue {
+      background: linear-gradient(90deg, #007bff, #00bfff);
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00bfff;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .btn-blue:hover {
+      transform: scale(1.05);
+    }
+    .google-btn {
+      margin-top: 1rem;
+      background-color: white;
+      color: #000;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .google-btn img {
+      height: 20px;
+      margin-right: 10px;
+    }
+    .whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 0 10px rgba(37, 211, 102, 0.7);
+      text-decoration: none;
+    }
+    .whatsapp img {
+      width: 20px;
+      margin-right: 8px;
+    }
+    .main-website {
+      display: none;
+      padding: 2rem;
+    }
+    .coins {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .coins img {
+      width: 25px;
+      margin-right: 8px;
+    }
+    .sidebar-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      font-size: 30px;
+      cursor: pointer;
+      background: #101820;
+      border-radius: 8px;
+      padding: 4px 10px;
+      box-shadow: 0 0 10px #00bfff;
+    }
+    .sidebar {
+      background-color: #0a0f14;
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 250px;
+      height: 100%;
+      padding: 2rem 1rem;
+      box-shadow: 4px 0 10px rgba(0, 191, 255, 0.3);
+      transition: 0.3s ease;
+    }
+    .sidebar.open {
+      left: 0;
+    }
+    .sidebar h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #00bfff;
+    }
+    .sidebar a {
+      display: block;
+      padding: 10px 0;
+      color: #fff;
+      text-decoration: none;
+    }
+    .sidebar .close-btn {
+      font-size: 20px;
+      color: red;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .youtube-live {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container" id="loginSection">
+    <img src="https://i.postimg.cc/Gh73tkws/Picsart-25-07-08-02-11-40-007.jpg" width="150" style="margin-bottom: 1rem;">
+    <div class="login-box">
+      <h2 style="text-align:center;">Login to Hayato E-Sports</h2>
+      <input type="text" id="phone" placeholder="Phone Number" required />
+      <input type="text" id="uid" placeholder="Free Fire UID" required />
+      <input type="email" id="email" placeholder="Email Address" required />
+      <button class="btn-blue" onclick="loginUser()">Login</button>
+      <div class="google-btn" onclick="loginUser()">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" /> Sign in with Google
+      </div>
+    </div>
+  </div>  <div class="main-website" id="mainWebsite">
+    <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+    <div class="coins">
+      <img src="https://i.postimg.cc/3Rq3f08S/finance.png" />
+      <span id="coinCount">0 Coins</span>
+    </div>
+    <div class="sidebar" id="sidebar">
+      <div class="close-btn" onclick="toggleSidebar()">✖ Close</div>
+      <h3 id="userName">Welcome</h3>
+      <a href="#">🏠 Dashboard</a>
+      <a href="#">📺 Live</a>
+      <a href="#">📋 Rules</a>
+      <a href="#">💰 Easypaisa Payment</a>
+      <a href="#">📢 Announcements</a>
+      <a href="#">🎮 Activate Slot</a>
+      <a href="#">🏆 Leaderboard</a>
+    </div><div class="youtube-live">
+  <h2>Watch Live Match</h2>
+  <iframe width="100%" height="315" src="https://www.youtube.com/embed/YljxCNGlyGQ?si=NqR-nPYQB_3Nix08" frameborder="0" allowfullscreen></iframe>
+</div>
+
+  </div>  <a class="whatsapp" href="https://wa.me/923164298830" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" /> Support
+  </a>  <script>
+    function loginUser() {
+      const phone = document.getElementById("phone").value;
+      const uid = document.getElementById("uid").value;
+      const email = document.getElementById("email").value;
+
+      if (!phone || !uid || !email) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      if (uid.length < 5 || isNaN(uid)) {
+        alert("Invalid UID. Please enter a valid Free Fire UID.");
+        return;
+      }
+
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("mainWebsite").style.display = "block";
+      document.getElementById("userName").innerHTML = `Welcome <img src='https://i.postimg.cc/VN8GR0s1/bluetick.png' width='20' style='vertical-align:middle'> ${uid}`;
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+    }
+  </script></body>
+</html>
