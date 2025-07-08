@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hayato E-Sports Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      padding: 10px 20px;
+      box-shadow: 0 0 10px #00f;
+    }
+    header img.logo {
+      height: 50px;
+    }
+    header .coins {
+      font-size: 18px;
+      color: gold;
+    }
+    nav {
+      background: #111;
+      padding: 15px;
+      display: flex;
+      justify-content: space-around;
+      border-top: 2px solid #222;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 20px;
+      background: #0022ff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0022ff;
+    }
+    nav a:hover {
+      background: #0055ff;
+    }
+    .section {
+      padding: 20px;
+    }
+    .blue-tick {
+      width: 20px;
+      vertical-align: middle;
+    }
+    .live-iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #00f;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="https://i.postimg.cc/Gh73tkws/Picsart-25-07-08-02-11-40-007.jpg" alt="Hayato Logo" />
+    <div class="coins">Coins: <span id="coins">0</span></div>
+  </header>
+
+  <nav>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#rules">Rules</a>
+    <a href="#payment">Easypaisa</a>
+    <a href="#live">Live</a>
+  </nav>
+
+  <div class="section" id="dashboard">
+    <h2>Welcome, <span id="ffname"></span> <img src="https://i.postimg.cc/VN8GR0s1/bluetick.png" class="blue-tick" /></h2>
+    <p>Your UID: <span id="uid"></span></p>
+    <p>You can book slots using your coins. One slot = 20 coins.</p>
+  </div>
+
+  <div class="section" id="payment">
+    <h2>Pay via Easypaisa</h2>
+    <p><strong>Number:</strong> 03202678978<br><strong>Name:</strong> Muhammad Mazz</p>
+    <p>After sending 20 Rs, upload your payment screenshot:</p>
+    <input type="file" />
+    <button>Send Payment Request</button>
+  </div>
+
+  <div class="section" id="rules">
+    <h2>Rules</h2>
+    <ul>
+      <li>No illegal activities.</li>
+      <li>If caught cheating, your account will be banned by admin.</li>
+      <li>Respect tournament rules and admins.</li>
+    </ul>
+  </div>
+
+  <div class="section" id="live">
+    <h2>Watch Live</h2>
+    <iframe class="live-iframe" src="https://www.youtube.com/embed/live_stream?channel=UCxxxxx"></iframe>
+  </div>
+
+  <script>
+    const uid = sessionStorage.getItem("uid");
+    const ffname = sessionStorage.getItem("ffname");
+    const coins = sessionStorage.getItem("coins");
+
+    if (!uid || !ffname) {
+      alert("You must login first.");
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("uid").innerText = uid;
+    document.getElementById("ffname").innerText = ffname;
+    document.getElementById("coins").innerText = coins;
+  </script>
+</body>
+</html>

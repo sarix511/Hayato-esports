@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Hayato E-Sports</title>
+  <style>
+    body {
+      background: #000;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .login-box {
+      background: #111;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px #00f;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-box h2 {
+      text-shadow: 0 0 8px #00f;
+      margin-bottom: 15px;
+    }
+    .logo {
+      width: 100px;
+      margin-bottom: 15px;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+    }
+    input {
+      background: #222;
+      color: white;
+    }
+    button {
+      background: #00f;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 0 12px #00f, 0 0 15px #00f inset;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #008cff;
+    }
+    .google-btn {
+      background: #fff;
+      color: #000;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <img class="logo" src="https://i.postimg.cc/Gh73tkws/Picsart-25-07-08-02-11-40-007.jpg" alt="Hayato Logo" />
+  <div class="login-box">
+    <h2>Login to Hayato E-Sports</h2>
+    <form id="loginForm">
+      <input type="text" id="uid" placeholder="Free Fire UID" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <div class="error" id="errorMsg"></div>
+    </form>
+    <button class="google-btn" id="googleLogin">Login with Google</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDnbD4DjpY3gaD3s1NdHOs_q6LqWzk5VqI",
+      authDomain: "hayato-esports-87c0e.firebaseapp.com",
+      projectId: "hayato-esports-87c0e",
+      storageBucket: "hayato-esports-87c0e.appspot.com",
+      messagingSenderId: "516162272287",
+      appId: "1:516162272287:web:12ecf2ae672cc0658ee92a"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const uid = document.getElementById("uid").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      try {
+        const loginResult = await auth.signInWithEmailAndPassword(email, password);
+        const userDoc = await db.collection("users").doc(loginResult.user.uid).get();
+        if (!userDoc.exists || userDoc.data().uid !== uid) {
+          errorMsg.textContent = "Invalid UID. Please enter a valid Free Fire UID.";
+          return;
+        }
+        if (!userDoc.data().approved) {
+          errorMsg.textContent = "Admin approval required.";
+          return;
+        }
+        sessionStorage.setItem("ffname", userDoc.data().ffname);
+        sessionStorage.setItem("coins", userDoc.data().coins);
+        sessionStorage.setItem("uid", userDoc.data().uid);
+        window.location.href = "index.html";
+      } catch (error) {
+        errorMsg.textContent = "Login failed: " + error.message;
+      }
+    });
+
+    document.getElementById("googleLogin").addEventListener("click", async () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        const result = await auth.signInWithPopup(provider);
+        const userDoc = await db.collection("users").doc(result.user.uid).get();
+        if (!userDoc.exists || !userDoc.data().approved) {
+          alert("Not approved by admin.");
+          return;
+        }
+        sessionStorage.setItem("ffname", userDoc.data().ffname);
+        sessionStorage.setItem("coins", userDoc.data().coins);
+        sessionStorage.setItem("uid", userDoc.data().uid);
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("Google login failed: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
